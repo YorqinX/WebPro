@@ -1,89 +1,392 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Programming Exercises</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-            padding: 40px 20px;
-            color: #1e293b;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        h1 { text-align: center; }
-        .week {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px #0001;
-        }
-        a {
-            display: inline-block;
-            margin: 8px;
-            padding: 10px 14px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
-        }
-        a:hover { background: #1d4ed8; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Joke Fetcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one centred column. A stage-style joke card on top, favourites shelf below, fetch pattern in a collapsible at the end. */
+:root{
+  --bg:#e8ecf1;
+  --surface:#ffffff;
+  --surface-2:#f2f5f9;
+  --ink:#10151c;
+  --muted:#556170;
+  --line:#cbd3de;
+  --accent:#c2255c;
+  --accent-ink:#ffffff;
+  --accent-soft:#fbe3ec;
+  --bad:#b42318;
+  --bad-soft:#fde8e6;
+  --code-bg:#121923;
+  --code-ink:#d5deea;
+  --font-display:'Familjen Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-body:'Familjen Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1218;
+    --surface:#161d27;
+    --surface-2:#1d2631;
+    --ink:#edf1f6;
+    --muted:#9aa7b6;
+    --line:#2b3643;
+    --accent:#ff6b9a;
+    --accent-ink:#2a0414;
+    --accent-soft:#3a1626;
+    --bad:#ff8a80;
+    --bad-soft:#3b1a17;
+    --code-bg:#0a0f15;
+    --code-ink:#d5deea;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1218;
+  --surface:#161d27;
+  --surface-2:#1d2631;
+  --ink:#edf1f6;
+  --muted:#9aa7b6;
+  --line:#2b3643;
+  --accent:#ff6b9a;
+  --accent-ink:#2a0414;
+  --accent-soft:#3a1626;
+  --bad:#ff8a80;
+  --bad-soft:#3b1a17;
+  --code-bg:#0a0f15;
+  --code-ink:#d5deea;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:32px 64px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+
+/* header */
+.top{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,6vw,2.9rem);line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:60ch}
+
+/* joke card */
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stage-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.chip{font-family:var(--font-mono);font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+.chip.live{color:var(--accent);border-color:var(--accent)}
+.joke-id{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.stage-body{display:flex;flex-direction:column;gap:20px;padding:24px 20px 20px}
+.block{display:flex;flex-direction:column;gap:6px;min-width:0}
+.label{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.setup{margin:0;font-family:var(--font-display);font-weight:500;font-size:clamp(1.3rem,3.6vw,1.65rem);line-height:1.25;overflow-wrap:anywhere}
+.punch{margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(1.45rem,4.2vw,1.95rem);line-height:1.2;color:var(--accent);overflow-wrap:anywhere}
+.punch-block{border-left:3px solid var(--accent);padding-left:14px}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px}
+button{font-family:inherit;font-size:15px;font-weight:600;border-radius:9px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:background .15s,border-color .15s,transform .1s}
+button:hover:not(:disabled){border-color:var(--ink)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.55;cursor:default}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.primary:hover:not(:disabled){background:var(--accent);border-color:var(--ink)}
+.small{font-size:13px;padding:6px 12px}
+
+/* status line + spinner */
+.status{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 20px;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.status[hidden]{display:none!important}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .spinner{animation-duration:2.4s}
+  button{transition:none}
+}
+
+/* error */
+.error{margin:0 20px 20px;padding:14px 16px;border-radius:10px;background:var(--bad-soft);border:1px solid var(--bad);display:flex;flex-direction:column;gap:10px}
+.error[hidden]{display:none!important}
+.error strong{color:var(--bad)}
+.error p{margin:0}
+.error code{font-family:var(--font-mono);font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.error-actions{display:flex;flex-wrap:wrap;gap:8px}
+
+/* favourites */
+.shelf-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+h2{margin:0;font-family:var(--font-display);font-size:1.25rem;font-weight:700;letter-spacing:-.01em}
+.count{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.favs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.fav{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fav-text{min-width:0;display:flex;flex-direction:column;gap:2px}
+.fav-setup{margin:0;font-weight:500;overflow-wrap:anywhere}
+.fav-punch{margin:0;color:var(--accent);font-weight:600;overflow-wrap:anywhere}
+.empty{margin:0;padding:18px 16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+
+/* code */
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style-position:inside}
+.code{margin:0;padding:16px;background:var(--code-bg);color:var(--code-ink);font-family:var(--font-mono);font-size:12.5px;line-height:1.75;overflow-x:auto;border-radius:0 0 11px 11px}
+
+.foot{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+
+@media (max-width:480px){
+  .fav{flex-direction:column}
+  .actions button{flex:1 1 100%}
+}
+</style>
 </head>
 <body>
-<div class="container">
-    <h1>Web Programming Exercises</h1>
-    <p style="text-align:center">My weekly HTML assignments</p>
 
-    <div class="week">
-        <h2>Week1</h2>
-        <a href="Week1/exercise 1.html">Exercise 1</a>
-        <a href="Week1/exercise 2.html">Exercise 2</a>
-        <a href="Week1/exercise 3.html">Exercise 3</a>
-        <a href="Week1/ex4.html">Exercise 4</a>
-        <a href="Week1/ex5.html">Exercise 5</a>
-        <a href="Week1/ex6.html">Exercise 6</a>
-        <a href="Week1/ex7.html">Exercise 7</a>
-        <a href="Week1/ex8.html">Exercise 8</a>
-    </div>
-    <div class="week">
-        <h2>Week 2</h2>
-        <a href="Week2/fex1.html">Exercise 1</a>
-        <a href="Week2/fex2.html">Exercise 2</a>
-        <a href="Week2/fex3.html">Exercise 3</a>
-        <a href="Week2/fex4.html">Exercise 4</a>
-        <a href="Week2/fex5.html">Exercise 5</a>
-        <a href="Week2/fex6.html">Exercise 6</a>
-        <a href="Week2/fex7.html">Exercise 7</a>
-        <a href="Week2/fex8.html">Exercise 8</a>
-    </div>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Web Programming · Week 6 · fetch() and async/await</span>
+    <h1>Joke Fetcher</h1>
+    <p class="lede">Press the button and the page asks a joke server for a new joke. The page does not reload.</p>
+  </header>
 
-    <div class="week">
-        <h2>Week 3</h2>
-        <a href="Week3/ex1.html">Exercise 1</a>
-        <a href="Week3/ex2.html">Exercise 2</a>
-        <a href="Week3/ex3.html">Exercise 3</a>
-        <a href="Week3/ex4.html">Exercise 4</a>
-        <a href="Week3/ex5.html">Exercise 5</a>
-        <a href="Week3/ex6.html">Exercise 6</a>
-        <a href="Week3/ex7.html">Exercise 7</a>
-        <a href="Week3/ex8.html">Exercise 8</a>
-    </div>
+  <main style="display:flex;flex-direction:column;gap:28px">
+    <section class="stage" aria-labelledby="stage-title">
+      <h2 id="stage-title" hidden>Current joke</h2>
+      <div class="stage-head">
+        <span class="chip" id="sourceChip">Example joke</span>
+        <span class="joke-id" id="jokeMeta">Press Load Joke for a live one</span>
+      </div>
+      <div class="stage-body">
+        <div class="block">
+          <span class="label">Setup</span>
+          <p class="setup" id="jokeSetup">Why do programmers prefer dark mode?</p>
+        </div>
+        <div class="block punch-block">
+          <span class="label">Punchline</span>
+          <p class="punch" id="jokePunch">Because light attracts bugs.</p>
+        </div>
+      </div>
 
-    <div class="week">
-        <h2>Week 4</h2>
-        <a href="Week4/ex1.html">Exercise 1</a>
-        <a href="Week4/ex2.html">Exercise 2</a>
-        <a href="Week4/ex3.html">Exercise 3</a>
-        <a href="Week4/ex4.html">Exercise 4</a>
-    </div>
+      <div class="actions">
+        <button class="primary" id="loadBtn" type="button">Load Joke</button>
+        <button id="saveBtn" type="button">Save Favourite</button>
+      </div>
+
+      <div class="status" id="status" role="status" aria-live="polite" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="statusText">Loading…</span>
+      </div>
+
+      <div class="error" id="error" role="alert" hidden>
+        <p><strong>That did not work.</strong> <span id="errorText">The joke server could not be reached. Check your connection and try again.</span></p>
+        <code id="errorDetail"></code>
+        <div class="error-actions">
+          <button class="small" id="retryBtn" type="button">Try again</button>
+          <button class="small" id="sampleBtn" type="button">Show a sample joke instead</button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="favs-title">
+      <div class="shelf-head">
+        <h2 id="favs-title">Saved favourites</h2>
+        <span class="count" id="favCount">0 saved</span>
+      </div>
+      <ul class="favs" id="favList"></ul>
+      <p class="empty" id="favEmpty">Nothing saved yet. Load a joke you like and press Save Favourite. Saved jokes stay in this browser.</p>
+    </section>
+
+    <details>
+      <summary>The code behind the button</summary>
+      <pre class="code">async function loadJoke() {
+  showLoading();                       // "Loading…" + spinner
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);  // 404/500 do not throw by themselves
+    const data = await res.json();
+    showJoke(data.setup, data.punchline);
+  } catch (err) {
+    showError(err);                    // friendly message
+  } finally {
+    hideLoading();                     // always runs
+  }
+}</pre>
+    </details>
+  </main>
+
+  <footer class="foot">Data from official-joke-api.appspot.com/random_joke</footer>
 </div>
+
+<script>
+(function () {
+  var API_URL = 'https://official-joke-api.appspot.com/random_joke';
+  var STORE_KEY = 'joke-fetcher-favourites';
+  var TIMEOUT_MS = 10000;
+
+  var SAMPLES = [
+    { id: 'sample-1', setup: 'Why do programmers prefer dark mode?', punchline: 'Because light attracts bugs.' },
+    { id: 'sample-2', setup: 'Why did the developer go broke?', punchline: 'He used up all his cache.' },
+    { id: 'sample-3', setup: 'What is a Promise afraid of?', punchline: 'Being rejected.' },
+    { id: 'sample-4', setup: 'How many programmers does it take to change a light bulb?', punchline: 'None. That is a hardware problem.' },
+    { id: 'sample-5', setup: 'Why was the JavaScript developer sad?', punchline: 'He did not know how to null his feelings.' },
+    { id: 'sample-6', setup: 'Why did the function return early?', punchline: 'It had nothing left to await.' }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    setup: $('jokeSetup'), punch: $('jokePunch'), meta: $('jokeMeta'), chip: $('sourceChip'),
+    load: $('loadBtn'), save: $('saveBtn'),
+    status: $('status'), statusText: $('statusText'),
+    error: $('error'), errorText: $('errorText'), errorDetail: $('errorDetail'),
+    retry: $('retryBtn'), sample: $('sampleBtn'),
+    favList: $('favList'), favEmpty: $('favEmpty'), favCount: $('favCount')
+  };
+
+  var current = { id: 'sample-1', setup: el.setup.textContent, punchline: el.punch.textContent };
+  var sampleIndex = 0;
+  var favourites = readFavs();
+
+  /* ---------- storage (always wrapped, may be unavailable) ---------- */
+  function readFavs() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  function writeFavs() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(favourites)); } catch (e) {}
+  }
+
+  /* ---------- helpers ---------- */
+  function keyFor(j) { return String(j.id) + '|' + j.setup; }
+  function isSaved(j) {
+    return favourites.some(function (f) { return keyFor(f) === keyFor(j); });
+  }
+
+  function showLoading() {
+    el.error.hidden = true;
+    el.status.hidden = false;
+    el.statusText.textContent = 'Loading…';
+    el.load.disabled = true;
+    el.save.disabled = true;
+    el.load.textContent = 'Loading…';
+  }
+  function hideLoading() {
+    el.status.hidden = true;
+    el.load.disabled = false;
+    el.load.textContent = 'Load Another Joke';
+    updateSaveButton();
+  }
+
+  function showJoke(joke, source) {
+    current = joke;
+    el.setup.textContent = joke.setup;
+    el.punch.textContent = joke.punchline;
+    if (source === 'live') {
+      el.chip.textContent = 'Live from the server';
+      el.chip.className = 'chip live';
+      el.meta.textContent = (joke.type ? joke.type + ' · ' : '') + 'id ' + joke.id;
+    } else {
+      el.chip.textContent = 'Sample joke';
+      el.chip.className = 'chip';
+      el.meta.textContent = 'Built into this page, not from the server';
+    }
+    el.error.hidden = true;
+    updateSaveButton();
+  }
+
+  function showError(err) {
+    var name = err && err.name;
+    el.errorText.textContent = name === 'AbortError'
+      ? 'The joke server took too long to answer. Try again in a moment.'
+      : 'The joke server could not be reached. Check your connection and try again.';
+    el.errorDetail.textContent = (err && err.message) ? 'Details: ' + err.message : '';
+    el.error.hidden = false;
+  }
+
+  function updateSaveButton() {
+    var saved = isSaved(current);
+    el.save.disabled = saved;
+    el.save.textContent = saved ? 'Saved ✓' : 'Save Favourite';
+  }
+
+  /* ---------- the fetch pattern from the study guide ---------- */
+  async function loadJoke() {
+    showLoading();
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
+    try {
+      var res = await fetch(API_URL, { signal: ctrl.signal });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      if (!data || !data.setup || !data.punchline) throw new Error('Unexpected data from server');
+      showJoke({ id: data.id, type: data.type, setup: data.setup, punchline: data.punchline }, 'live');
+    } catch (err) {
+      showError(err);
+    } finally {
+      clearTimeout(timer);
+      hideLoading();
+    }
+  }
+
+  function showSample() {
+    var s = SAMPLES[sampleIndex % SAMPLES.length];
+    sampleIndex += 1;
+    showJoke(s, 'sample');
+  }
+
+  /* ---------- favourites ---------- */
+  function saveCurrent() {
+    if (isSaved(current)) return;
+    favourites.unshift({ id: current.id, setup: current.setup, punchline: current.punchline });
+    writeFavs();
+    renderFavs();
+    updateSaveButton();
+  }
+  function removeFav(key) {
+    favourites = favourites.filter(function (f) { return keyFor(f) !== key; });
+    writeFavs();
+    renderFavs();
+    updateSaveButton();
+  }
+  function renderFavs() {
+    el.favList.textContent = '';
+    favourites.forEach(function (f) {
+      var li = document.createElement('li');
+      li.className = 'fav';
+      var text = document.createElement('div');
+      text.className = 'fav-text';
+      var s = document.createElement('p'); s.className = 'fav-setup'; s.textContent = f.setup;
+      var p = document.createElement('p'); p.className = 'fav-punch'; p.textContent = f.punchline;
+      text.appendChild(s); text.appendChild(p);
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'small'; btn.textContent = 'Remove';
+      btn.setAttribute('aria-label', 'Remove saved joke: ' + f.setup);
+      btn.addEventListener('click', function () { removeFav(keyFor(f)); });
+      li.appendChild(text); li.appendChild(btn);
+      el.favList.appendChild(li);
+    });
+    el.favEmpty.hidden = favourites.length > 0;
+    el.favCount.textContent = favourites.length + ' saved';
+  }
+
+  el.load.addEventListener('click', loadJoke);
+  el.retry.addEventListener('click', loadJoke);
+  el.sample.addEventListener('click', showSample);
+  el.save.addEventListener('click', saveCurrent);
+
+  renderFavs();
+  updateSaveButton();
+})();
+</script>
+
 </body>
 </html>
