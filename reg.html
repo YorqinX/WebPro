@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <style>
+    :root {
+      --valid: #2e9e5b;
+      --invalid: #d64545;
+      --border: #c9ced6;
+      --accent: #3b6ef5;
+      --bg: #f4f6fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 2rem 1rem;
+      color: #1d2330;
+    }
+
+    form {
+      max-width: 540px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 { margin-top: 0; font-size: 1.6rem; }
+
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 0 0 1.5rem;
+      padding: 1rem 1.25rem 1.25rem;
+    }
+
+    legend {
+      padding: 0 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .field { margin-bottom: 1rem; }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .req::after { content: " *"; color: var(--invalid); }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 110, 245, 0.2);
+    }
+
+    /* Valid / invalid states: only show once the user has typed something */
+    input:not(:placeholder-shown):valid {
+      border-color: var(--valid);
+      background: #f3fbf6;
+    }
+
+    input:not(:placeholder-shown):invalid {
+      border-color: var(--invalid);
+      background: #fdf4f4;
+    }
+
+    /* Date input has no placeholder, so use :valid/:invalid directly once filled */
+    input[type="date"]:valid { border-color: var(--valid); }
+    input[type="date"]:invalid { border-color: var(--invalid); }
+
+    /* Select: highlight when a real option is chosen */
+    select:required:valid { border-color: var(--valid); }
+    select:required:invalid { color: #777; }
+
+    .hint {
+      display: none;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      color: var(--invalid);
+    }
+
+    input:not(:placeholder-shown):invalid ~ .hint { display: block; }
+
+    .terms {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .terms input { width: 1.1rem; height: 1.1rem; }
+    .terms label { margin: 0; }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .range-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+
+    #rangeValue {
+      min-width: 2.5rem;
+      text-align: center;
+      font-weight: 700;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    button:hover { background: #2b57d6; }
+
+    /* Disable the button until the whole form is valid */
+    form:invalid button { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <form id="regForm" method="post" action="/register">
+    <h1>Student Registration</h1>
+
+    <fieldset>
+      <legend>Personal Info</legend>
+
+      <div class="field">
+        <label for="fullName" class="req">Full Name</label>
+        <input type="text" id="fullName" name="fullName" placeholder="Jane Doe" required>
+        <span class="hint">Please enter your full name.</span>
+      </div>
+
+      <div class="field">
+        <label for="studentId" class="req">Student ID</label>
+        <input type="text" id="studentId" name="studentId" placeholder="9 digits, e.g. 202312345"
+               pattern="\d{9}" inputmode="numeric" required>
+        <span class="hint">Student ID must be exactly 9 digits.</span>
+      </div>
+
+      <div class="field">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob">
+      </div>
+
+      <div class="field">
+        <label for="major">Major</label>
+        <select id="major" name="major">
+          <option value="">-- Select a major --</option>
+          <option value="accounting">Accounting</option>
+          <option value="finance">Finance</option>
+          <option value="cs">Computer Science</option>
+          <option value="business">Business Administration</option>
+          <option value="engineering">Engineering</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Account Info</legend>
+
+      <div class="field">
+        <label for="email" class="req">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        <span class="hint">Please enter a valid email address.</span>
+      </div>
+
+      <div class="field">
+        <label for="password" class="req">Password</label>
+        <input type="password" id="password" name="password" placeholder="At least 8 characters"
+               minlength="8" required>
+        <span class="hint">Password must be at least 8 characters.</span>
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" placeholder="010-1234-5678"
+               pattern="\d{3}-\d{4}-\d{4}" inputmode="tel">
+        <span class="hint">Format: 123-4567-8901</span>
+      </div>
+
+      <div class="field">
+        <label for="experience">Years of coding experience</label>
+        <div class="range-row">
+          <input type="range" id="experience" name="experience" min="0" max="10" value="0" step="1">
+          <output id="rangeValue" for="experience">0</output>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="terms">
+      <input type="checkbox" id="terms" name="terms" value="agreed" required>
+      <label for="terms" class="req">I agree to the terms</label>
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    const slider = document.getElementById('experience');
+    const display = document.getElementById('rangeValue');
+
+    function updateValue() {
+      display.textContent = slider.value;
+    }
+
+    slider.addEventListener('input', updateValue);
+    updateValue();
+  </script>
+</body>
+</html>
