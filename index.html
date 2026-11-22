@@ -1,106 +1,378 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Programming Exercises</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-            padding: 40px 20px;
-            color: #1e293b;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        h1 { text-align: center; }
-        .week {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px #0001;
-        }
-        a {
-            display: inline-block;
-            margin: 8px;
-            padding: 10px 14px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
-        }
-        a:hover { background: #1d4ed8; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yorqin | Financial Data Analyst Portfolio</title>
+  <meta name="description" content="Portfolio of Yorqin, a Gachon University double major in Computer Engineering and Business Administration, focused on corporate finance, investment analysis and financial data analytics.">
+  <meta name="theme-color" content="#070b14">
+
+  <!-- Set theme before first paint so there is no flash -->
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+    document.documentElement.classList.add("js");
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <h1>Web Programming Exercises</h1>
-    <p style="text-align:center">My weekly HTML assignments</p>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-    <div class="week">
-        <h2>Week1</h2>
-        <a href="Week1/exercise 1.html">Exercise 1</a>
-        <a href="Week1/exercise 2.html">Exercise 2</a>
-        <a href="Week1/exercise 3.html">Exercise 3</a>
-        <a href="Week1/ex4.html">Exercise 4</a>
-        <a href="Week1/ex5.html">Exercise 5</a>
-        <a href="Week1/ex6.html">Exercise 6</a>
-        <a href="Week1/ex7.html">Exercise 7</a>
-        <a href="Week1/ex8.html">Exercise 8</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="Yorqin, back to top">
+        <span class="brand-mark" aria-hidden="true">Y</span>
+        <span class="brand-text">YORQIN<span class="brand-dot">.</span>FIN</span>
+      </a>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#assignments">Assignments</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to light mode">
+          <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/></svg>
+          <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></g></svg>
+        </button>
+        <button id="menu-toggle" class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="week">
-        <h2>Week 2</h2>
-        <a href="Week2/fex1.html">Exercise 1</a>
-        <a href="Week2/fex2.html">Exercise 2</a>
-        <a href="Week2/fex3.html">Exercise 3</a>
-        <a href="Week2/fex4.html">Exercise 4</a>
-        <a href="Week2/fex5.html">Exercise 5</a>
-        <a href="Week2/fex6.html">Exercise 6</a>
-        <a href="Week2/fex7.html">Exercise 7</a>
-        <a href="Week2/fex8.html">Exercise 8</a>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section id="top" class="hero" aria-labelledby="hero-title">
+      <canvas id="hero-chart" class="hero-chart" aria-hidden="true"></canvas>
+      <div class="hero-fade" aria-hidden="true"></div>
+      <div class="wrap hero-inner">
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Open to internships &amp; analyst roles</p>
+        <h1 id="hero-title">Turning <span class="grad">financial data</span> into decisions.</h1>
+        <p class="lead">
+          I'm Yorqin, a double major in Computer Engineering and Business Administration at Gachon University,
+          building toward a career as a <strong>financial data analyst</strong>, where corporate finance meets code.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#projects">View projects</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEYWORD TICKER (decorative) -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>DCF</span><span>WACC</span><span>EBITDA</span><span>FREE CASH FLOW</span><span>P/E</span><span>EV/EBITDA</span><span>CAPM</span><span>IFRS</span><span>TAX PLANNING</span><span>RISK &amp; RETURN</span><span>PORTFOLIO THEORY</span><span>VARIANCE ANALYSIS</span>
+        <span>DCF</span><span>WACC</span><span>EBITDA</span><span>FREE CASH FLOW</span><span>P/E</span><span>EV/EBITDA</span><span>CAPM</span><span>IFRS</span><span>TAX PLANNING</span><span>RISK &amp; RETURN</span><span>PORTFOLIO THEORY</span><span>VARIANCE ANALYSIS</span>
+      </div>
     </div>
 
-    <div class="week">
-        <h2>Week 3</h2>
-        <a href="Week3/ex1.html">Exercise 1</a>
-        <a href="Week3/ex2.html">Exercise 2</a>
-        <a href="Week3/ex3.html">Exercise 3</a>
-        <a href="Week3/ex4.html">Exercise 4</a>
-        <a href="Week3/ex5.html">Exercise 5</a>
-        <a href="Week3/ex6.html">Exercise 6</a>
-        <a href="Week3/ex7.html">Exercise 7</a>
-        <a href="Week3/ex8.html">Exercise 8</a>
-    </div>
+    <!-- ABOUT -->
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="wrap about-grid">
+        <div class="reveal">
+          <p class="section-tag">01 / About</p>
+          <h2 id="about-title">Finance brain. Engineer's toolkit.</h2>
+          <p>
+            I'm 20 and study Business Administration and Computer Engineering side by side. That mix is deliberate:
+            I want to understand <em>why</em> a company's numbers move, and be able to build the tools that show it.
+          </p>
+          <p>
+            My interests sit in corporate finance, investment finance, accounting and taxation, with data analysis
+            as the thread that ties them together. The goal: a role as a financial data analyst turning raw
+            statements and market data into clear, defensible insight.
+          </p>
+        </div>
 
-    <div class="week">
-        <h2>Week 4</h2>
-        <a href="Week4/ex1.html">Exercise 1</a>
-        <a href="Week4/ex2.html">Exercise 2</a>
-        <a href="Week4/ex3.html">Exercise 3</a>
-        <a href="Week4/ex4.html">Exercise 4</a>
+        <div class="portrait-card reveal" role="img" aria-label="Portrait placeholder showing the initial Y over a rising line chart">
+          <svg viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--accent)"/>
+                <stop offset="1" stop-color="var(--accent-2)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="320" height="320" rx="24" fill="var(--surface-2)"/>
+            <path d="M0 250 L50 220 L95 235 L150 170 L205 190 L260 110 L320 80" fill="none" stroke="url(#pg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M0 250 L50 220 L95 235 L150 170 L205 190 L260 110 L320 80 L320 320 L0 320 Z" fill="url(#pg)" opacity="0.12"/>
+            <text x="50%" y="52%" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="140" font-weight="700" fill="url(#pg)">Y</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="wrap stats reveal">
+        <div class="stat"><span class="stat-num" data-count="2">0</span><span class="stat-label">Majors</span></div>
+        <div class="stat"><span class="stat-num" data-count="4">0</span><span class="stat-label">Finance focus areas</span></div>
+        <div class="stat"><span class="stat-num" data-count="34">0</span><span class="stat-label">Web projects built</span></div>
+        <div class="stat"><span class="stat-num" data-count="1">0</span><span class="stat-label">Goal: financial data analyst</span></div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section alt" aria-labelledby="skills-title">
+      <div class="wrap">
+        <p class="section-tag">02 / Skills</p>
+        <h2 id="skills-title">What I bring to the desk</h2>
+
+        <!-- TODO: edit these lists so they match what you truly know -->
+        <div class="card-grid">
+          <article class="card reveal">
+            <h3>Finance</h3>
+            <ul class="chips">
+              <li>Corporate finance</li>
+              <li>Investment analysis</li>
+              <li>Valuation (DCF, comps)</li>
+              <li>Risk &amp; return</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Accounting &amp; Tax</h3>
+            <ul class="chips">
+              <li>Financial statements</li>
+              <li>Ratio analysis</li>
+              <li>Taxation</li>
+              <li>Cost accounting</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Data &amp; Code</h3>
+            <ul class="chips">
+              <li>Excel</li>
+              <li>SQL</li>
+              <li>Python</li>
+              <li>Data visualization</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Web</h3>
+            <ul class="chips">
+              <li>HTML5</li>
+              <li>CSS3</li>
+              <li>JavaScript</li>
+              <li>GitHub Pages</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <div class="wrap">
+        <p class="section-tag">03 / Projects</p>
+        <h2 id="projects-title">Selected work</h2>
+
+        <div class="filters" role="group" aria-label="Filter projects by category">
+          <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter" data-filter="finance" aria-pressed="false">Finance</button>
+          <button type="button" class="filter" data-filter="data" aria-pressed="false">Data</button>
+          <button type="button" class="filter" data-filter="web" aria-pressed="false">Web</button>
+        </div>
+        <p id="filter-status" class="sr-only" role="status" aria-live="polite"></p>
+
+        <!-- TODO: replace the "In progress" cards with your real finance/data projects and add links -->
+        <div class="project-grid">
+          <article class="project" data-cat="web">
+            <span class="badge">Web · Business</span>
+            <h3>Cloud QR Ordering &amp; POS</h3>
+            <p>A cloud-based restaurant system where guests order from a QR code and staff manage orders and payments in one place.</p>
+            <ul class="chips small"><li>Cloud</li><li>POS</li><li>Product</li></ul>
+          </article>
+
+          <article class="project" data-cat="finance">
+            <span class="badge badge-warn">Finance · In progress</span>
+            <h3>Company Valuation Model</h3>
+            <p>A DCF and multiples-based valuation of a listed company, from statement forecasts to a price range.</p>
+            <ul class="chips small"><li>DCF</li><li>WACC</li><li>Excel</li></ul>
+          </article>
+
+          <article class="project" data-cat="data">
+            <span class="badge badge-warn">Data · In progress</span>
+            <h3>Financial Statement Dashboard</h3>
+            <p>An interactive dashboard that turns multi-year statements into ratios, trends and flags.</p>
+            <ul class="chips small"><li>Python</li><li>Ratios</li><li>Charts</li></ul>
+          </article>
+
+          <article class="project" data-cat="web">
+            <span class="badge">Web</span>
+            <h3>Joke Server Site</h3>
+            <p>A small full-stack exercise: a server that serves jokes to a front-end page.</p>
+            <ul class="chips small"><li>JavaScript</li><li>Server</li></ul>
+            <a class="project-link" href="week6homework/index.html">Open project <span class="sr-only">Joke Server Site</span><span aria-hidden="true">→</span></a>
+          </article>
+
+          <article class="project" data-cat="web">
+            <span class="badge">Web</span>
+            <h3>Registration Form</h3>
+            <p>A validated sign-up form built as the Week 8 homework.</p>
+            <ul class="chips small"><li>HTML forms</li><li>Validation</li></ul>
+            <a class="project-link" href="week8/reg.html">Open project <span class="sr-only">Registration Form</span><span aria-hidden="true">→</span></a>
+          </article>
+
+          <article class="project" data-cat="web">
+            <span class="badge">Web · Performance</span>
+            <h3>Lighthouse Performance Report</h3>
+            <p>An audit of one of my pages covering performance, accessibility and best practices.</p>
+            <ul class="chips small"><li>Lighthouse</li><li>Audit</li></ul>
+            <a class="project-link" href="week9/Lighthouse%20Report.html">Open report <span class="sr-only">Lighthouse Performance Report</span><span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section id="assignments" class="section alt" aria-labelledby="assign-title">
+      <div class="wrap">
+        <p class="section-tag">04 / Archive</p>
+        <h2 id="assign-title">Web programming assignments</h2>
+        <p class="muted">Every weekly exercise from my Web Programming course, kept as a public archive.</p>
+
+        <div class="week-grid">
+          <details class="week" open>
+            <summary>Week 1</summary>
+            <div class="links">
+              <a href="Week1/exercise%201.html">Exercise 1</a>
+              <a href="Week1/exercise%202.html">Exercise 2</a>
+              <a href="Week1/exercise%203.html">Exercise 3</a>
+              <a href="Week1/ex4.html">Exercise 4</a>
+              <a href="Week1/ex5.html">Exercise 5</a>
+              <a href="Week1/ex6.html">Exercise 6</a>
+              <a href="Week1/ex7.html">Exercise 7</a>
+              <a href="Week1/ex8.html">Exercise 8</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 2</summary>
+            <div class="links">
+              <a href="Week2/fex1.html">Exercise 1</a>
+              <a href="Week2/fex2.html">Exercise 2</a>
+              <a href="Week2/fex3.html">Exercise 3</a>
+              <a href="Week2/fex4.html">Exercise 4</a>
+              <a href="Week2/fex5.html">Exercise 5</a>
+              <a href="Week2/fex6.html">Exercise 6</a>
+              <a href="Week2/fex7.html">Exercise 7</a>
+              <a href="Week2/fex8.html">Exercise 8</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 3</summary>
+            <div class="links">
+              <a href="Week3/ex1.html">Exercise 1</a>
+              <a href="Week3/ex2.html">Exercise 2</a>
+              <a href="Week3/ex3.html">Exercise 3</a>
+              <a href="Week3/ex4.html">Exercise 4</a>
+              <a href="Week3/ex5.html">Exercise 5</a>
+              <a href="Week3/ex6.html">Exercise 6</a>
+              <a href="Week3/ex7.html">Exercise 7</a>
+              <a href="Week3/ex8.html">Exercise 8</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 4</summary>
+            <div class="links">
+              <a href="Week4/ex1.html">Exercise 1</a>
+              <a href="Week4/ex2.html">Exercise 2</a>
+              <a href="Week4/ex3.html">Exercise 3</a>
+              <a href="Week4/ex4.html">Exercise 4</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 7 · Joke server site</summary>
+            <div class="links">
+              <a href="week6homework/index.html">Homework</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 8</summary>
+            <div class="links">
+              <a href="week8/ex1.html">Exercise 1</a>
+              <a href="week8/ex2.html">Exercise 2</a>
+              <a href="week8/ex3.html">Exercise 3</a>
+              <a href="week8/reg.html">Homework</a>
+            </div>
+          </details>
+
+          <details class="week">
+            <summary>Week 9</summary>
+            <div class="links">
+              <a href="week9/Lighthouse%20Report.html">Lighthouse report</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="section" aria-labelledby="edu-title">
+      <div class="wrap">
+        <p class="section-tag">05 / Path</p>
+        <h2 id="edu-title">Education &amp; direction</h2>
+
+        <ol class="timeline">
+          <li class="reveal">
+            <span class="dot" aria-hidden="true"></span>
+            <h3>Gachon University</h3>
+            <p class="meta">Double major · Business Administration &amp; Computer Engineering</p>
+            <p>Combining corporate finance, accounting and taxation coursework with programming and data skills.</p>
+          </li>
+          <li class="reveal">
+            <span class="dot" aria-hidden="true"></span>
+            <h3>Building in public</h3>
+            <p class="meta">Web programming · GitHub</p>
+            <p>Weekly assignments, a joke server, forms and a performance audit, all published on GitHub Pages.</p>
+          </li>
+          <li class="reveal">
+            <span class="dot dot-next" aria-hidden="true"></span>
+            <h3>Next: financial data analyst</h3>
+            <p class="meta">Target role</p>
+            <p>Valuation models, forecasting and dashboards that help a finance team decide faster.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section alt" aria-labelledby="contact-title">
+      <div class="wrap contact-box reveal">
+        <p class="section-tag">06 / Contact</p>
+        <h2 id="contact-title">Let's talk numbers.</h2>
+        <p>Looking for an internship or junior analyst opportunity? I'd love to hear from you.</p>
+        <div class="cta-row">
+          <!-- TODO: replace with your real email and profile links -->
+          <a class="btn btn-primary" href="mailto:your.email@example.com">Email me</a>
+          <a class="btn btn-ghost" href="https://github.com/your-username">GitHub</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/your-profile">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year">2026</span> Yorqin. Built with HTML, CSS and JavaScript.</p>
+      <a href="#top">Back to top ↑</a>
     </div>
-     <div class="week">
-        <h2>Week 7 joke server site</h2>
-        <a href="week6homework/index.html">Homework</a>
-    </div>
-     <div class="week">
-        <h2>Week8</h2>
-        <a href="week8/ex1.html">Exercise 1</a>
-        <a href="week8/ex2.html">Exercise 2</a>
-         <a href="week8/ex3.html">Exercise 3</a>
-        <a href="week8/reg.html">homework week 8</a>
-         
-         
-    </div>
-    <div class="week">
-        <h2>Week 9</h2>
-        <a href="week9/Lighthouse Report.html">Performance of my page report</a>
-    </div>
-</div>
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
