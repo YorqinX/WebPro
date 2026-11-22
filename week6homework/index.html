@@ -221,12 +221,12 @@ summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style-position:ins
     </details>
   </main>
 
-  <footer class="foot">Data from official-joke-api.appspot.com/random_joke</footer>
+  <footer class="foot">Data from v2.jokeapi.dev/joke/Programming,Misc</footer>
 </div>
 
 <script>
 (function () {
-  var API_URL = 'https://official-joke-api.appspot.com/random_joke';
+  var API_URL = 'https://v2.jokeapi.dev/joke/Programming,Misc?safe-mode&type=twopart';
   var STORE_KEY = 'joke-fetcher-favourites';
   var TIMEOUT_MS = 10000;
 
@@ -327,8 +327,8 @@ summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style-position:ins
       var res = await fetch(API_URL, { signal: ctrl.signal });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var data = await res.json();
-      if (!data || !data.setup || !data.punchline) throw new Error('Unexpected data from server');
-      showJoke({ id: data.id, type: data.type, setup: data.setup, punchline: data.punchline }, 'live');
+      if (!data || data.error || !data.setup || !data.delivery) throw new Error('Unexpected data from server');
+showJoke({ id: data.id, type: data.category, setup: data.setup, punchline: data.delivery }, 'live');
     } catch (err) {
       showError(err);
     } finally {
